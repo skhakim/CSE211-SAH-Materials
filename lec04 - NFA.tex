@@ -1178,7 +1178,6 @@ The common theme:
 \end{center}
 
 \end{frame}
-
 %================================================
 \section{Lecture 4D: Epsilon Transitions}
 
@@ -1392,6 +1391,245 @@ Since \(r_2\in F\), this path accepts. Therefore, the epsilon-NFA accepts \(acd\
 
 \end{frame}
 %------------------------------------------------
+\begin{frame}{A More Complex Epsilon-NFA: Accepted Case}
+
+\small
+Input for the computation tree: \(01011\)
+
+\begin{center}
+\begin{tikzpicture}[
+  ->,>=Stealth,shorten >=1pt,
+  node distance=1.55cm,
+  every state/.style={minimum size=7mm},
+  every node/.style={font=\scriptsize}
+]
+
+\node[state,initial] (s) {$s$};
+\node[state,above right=0.55cm and 1.2cm of s] (a0) {$a_0$};
+\node[state,below right=0.55cm and 1.2cm of s] (b0) {$b_0$};
+
+\node[state,right=1.35cm of a0] (a1) {$a_1$};
+\node[state,right=1.35cm of a1] (a2) {$a_2$};
+\node[state,right=1.35cm of a2] (a3) {$a_3$};
+\node[state,accepting,right=1.35cm of a3] (f) {$f$};
+
+\node[state,right=1.35cm of b0] (b1) {$b_1$};
+\node[state,right=1.35cm of b1] (b2) {$b_2$};
+
+\path
+(s) edge node[above left] {$\eps$} (a0)
+(s) edge node[below left] {$\eps$} (b0)
+
+(a0) edge node[above] {$0$} (a1)
+(a1) edge[loop above] node {$1$} ()
+(a1) edge node[above] {$0$} (a2)
+(a2) edge node[above] {$1$} (a3)
+(a3) edge node[above] {$1$} (f)
+
+(b0) edge[loop below] node {$0$} ()
+(b0) edge node[below] {$1$} (b1)
+(b1) edge node[below] {$0$} (b2);
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3em}
+The upper module tries to read \(01^*011\). The lower module is a tempting branch, but it will die on this input.
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Entire Computation Tree: \(01011\)}
+
+\scriptsize
+\begin{center}
+\begin{tikzpicture}[
+  ->,>=Stealth,
+  every node/.style={font=\scriptsize},
+  st/.style={draw,circle,minimum size=6.6mm,inner sep=1pt},
+  acc/.style={st,double,text=green!50!black},
+  dead/.style={draw,rounded corners,fill=black!5,text=gray!80!black,inner sep=2pt},
+  lab/.style={fill=white,inner sep=1pt,font=\scriptsize}
+]
+
+\node[st] (s) at (0,0) {$s$};
+
+\node[st] (a0) at (-2.4,-0.9) {$a_0$};
+\node[st] (b0) at (2.4,-0.9) {$b_0$};
+
+\node[st] (a1) at (-2.4,-1.8) {$a_1$};
+\node[st] (b0b) at (2.4,-1.8) {$b_0$};
+
+\node[st] (a1b) at (-2.4,-2.7) {$a_1$};
+\node[st] (b1) at (2.4,-2.7) {$b_1$};
+
+\node[st] (a2) at (-2.4,-3.6) {$a_2$};
+\node[st] (b2) at (2.4,-3.6) {$b_2$};
+
+\node[st] (a3) at (-2.4,-4.5) {$a_3$};
+\node[dead] (bd) at (2.4,-4.5) {dead};
+
+\node[acc] (f) at (-2.4,-5.4) {$f$};
+
+\draw (s) -- node[lab,above left] {$\eps$} (a0);
+\draw (s) -- node[lab,above right] {$\eps$} (b0);
+
+\draw (a0) -- node[lab,left] {read \(0\)} (a1);
+\draw (b0) -- node[lab,right] {read \(0\)} (b0b);
+
+\draw (a1) -- node[lab,left] {read \(1\)} (a1b);
+\draw (b0b) -- node[lab,right] {read \(1\)} (b1);
+
+\draw (a1b) -- node[lab,left] {read \(0\)} (a2);
+\draw (b1) -- node[lab,right] {read \(0\)} (b2);
+
+\draw (a2) -- node[lab,left] {read \(1\)} (a3);
+\draw (b2) -- node[lab,right] {read \(1\)} (bd);
+
+\draw (a3) -- node[lab,left] {read \(1\)} (f);
+
+\node[text=green!50!black,align=center] at (-4.0,-5.35)
+  {all input read\\accepting leaf};
+\node[text=gray!80!black,align=center] at (4.0,-4.5)
+  {no \(1\)-transition\\from \(b_2\)};
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.2em}
+The input is accepted because at least one branch consumes all five symbols and ends in \(f\).
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{A More Complex Epsilon-NFA: Rejected Case}
+
+\small
+Input for the computation tree: \(10100\)
+
+\begin{center}
+\begin{tikzpicture}[
+  ->,>=Stealth,shorten >=1pt,
+  node distance=1.45cm,
+  every state/.style={minimum size=7mm},
+  every node/.style={font=\scriptsize}
+]
+
+\node[state,initial] (s) {$s$};
+\node[state,above right=0.75cm and 1.0cm of s] (a0) {$a_0$};
+\node[state,right=1.1cm of s] (b0) {$b_0$};
+\node[state,below right=0.75cm and 1.0cm of s] (c0) {$c_0$};
+
+\node[state,right=1.25cm of a0] (a1) {$a_1$};
+\node[state,right=1.25cm of a1] (a2) {$a_2$};
+\node[state,right=1.25cm of a2] (a3) {$a_3$};
+\node[state,right=1.25cm of a3] (a4) {$a_4$};
+
+\node[state,right=1.25cm of b0] (b1) {$b_1$};
+\node[state,right=1.25cm of b1] (b2) {$b_2$};
+
+\node[state,right=1.25cm of c0] (c1) {$c_1$};
+\node[state,accepting,right=1.8cm of b2] (f) {$f$};
+
+\path
+(s) edge node[above left] {$\eps$} (a0)
+(s) edge node[above] {$\eps$} (b0)
+(s) edge node[below left] {$\eps$} (c0)
+
+(a0) edge node[above] {$1$} (a1)
+(a1) edge node[above] {$0$} (a2)
+(a2) edge node[above] {$\eps$} (a3)
+(a3) edge node[above] {$1$} (a4)
+(a4) edge[bend left=15] node[above] {$1$} (f)
+
+(b0) edge node[above] {$1$} (b1)
+(b1) edge node[above] {$\eps$} (b2)
+(b2) edge[loop above] node {$0$} ()
+(b2) edge node[above] {$1$} (f)
+
+(c0) edge node[below] {$0$} (c1)
+(c1) edge node[below] {$1$} (f);
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.2em}
+This machine has three \(\eps\)-chosen modules, but none can consume all of \(10100\) and finish accepting.
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Entire Computation Tree: \(10100\)}
+
+\scriptsize
+\begin{center}
+\begin{tikzpicture}[
+  ->,>=Stealth,
+  every node/.style={font=\scriptsize},
+  st/.style={draw,circle,minimum size=6.3mm,inner sep=1pt},
+  acc/.style={st,double,text=green!50!black},
+  dead/.style={draw,rounded corners,fill=black!5,text=gray!80!black,inner sep=2pt},
+  lab/.style={fill=white,inner sep=1pt,font=\scriptsize}
+]
+
+\node[st] (s) at (0,0) {$s$};
+
+\node[st] (a0) at (-3.2,-0.8) {$a_0$};
+\node[st] (b0) at (0,-0.8) {$b_0$};
+\node[st] (c0) at (3.2,-0.8) {$c_0$};
+
+\node[st] (a1) at (-3.2,-1.6) {$a_1$};
+\node[st] (b1) at (0,-1.6) {$b_1$};
+\node[dead] (cd) at (3.65,-1.85) {dead};
+
+\node[st] (a2) at (-3.2,-2.4) {$a_2$};
+\node[st] (b2e) at (0,-2.4) {$b_2$};
+
+\node[st] (a3) at (-3.2,-3.2) {$a_3$};
+\node[st] (b2) at (0,-3.2) {$b_2$};
+
+\node[st] (a4) at (-3.2,-4.0) {$a_4$};
+\node[acc] (fearly) at (0,-4.0) {$f$};
+
+\node[dead] (ad) at (-3.2,-4.8) {dead};
+\node[dead] (fd) at (0,-4.8) {dead};
+
+\draw (s) -- node[lab,above left] {$\eps$} (a0);
+\draw (s) -- node[lab,right] {$\eps$} (b0);
+\draw (s) -- node[lab,above right] {$\eps$} (c0);
+
+\draw (a0) -- node[lab,left] {read \(1\)} (a1);
+\draw (b0) -- node[lab,right] {read \(1\)} (b1);
+\draw (c0) -- node[lab,above right] {read \(1\)} (cd);
+
+\draw (a1) -- node[lab,left] {read \(0\)} (a2);
+\draw (b1) -- node[lab,right] {$\eps$} (b2e);
+
+\draw (a2) -- node[lab,left] {$\eps$} (a3);
+\draw (b2e) -- node[lab,right] {read \(0\)} (b2);
+
+\draw (a3) -- node[lab,left] {read \(1\)} (a4);
+\draw (b2) -- node[lab,right] {read \(1\)} (fearly);
+
+\draw (a4) -- node[lab,left] {read \(0\)} (ad);
+\draw (fearly) -- node[lab,right] {read \(0\)} (fd);
+
+\node[text=gray!80!black,align=center] at (4.95,-2.2)
+  {first symbol\\already wrong};
+\node[text=gray!80!black,align=center] at (-4.7,-4.8)
+  {needs \(1\),\\sees \(0\)};
+\node[text=gray!80!black,align=center] at (1.45,-4.8)
+  {reaches \(f\)\\too early};
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.2em}
+Every branch either dies, or reaches an accepting state before the input is finished and then dies on the remaining symbol.
+
+\end{frame}
+
+%------------------------------------------------
 \begin{frame}{Epsilon-Closure}
 
 To remove \(\eps\)-transitions, we need one definition.
@@ -1479,6 +1717,66 @@ This handles the case where the epsilon-NFA accepts after the input has already 
 \end{frame}
 
 %------------------------------------------------
+\begin{frame}{Why Epsilon Elimination Is Correct}
+
+\small
+The formula
+\[
+\delta'(q,a)
+=
+E\left(\bigcup_{r\in E(q)}\delta(r,a)\right)
+\]
+compresses one full block of behavior:
+
+\[
+\eps^*
+\quad\text{then read }a\quad
+\text{then }\eps^*.
+\]
+
+\vspace{0.7em}
+So every one-symbol transition in \(M'\) represents a real path in the original epsilon-NFA.
+
+\vspace{0.7em}
+Conversely, every accepting computation in the epsilon-NFA can be broken into such blocks, one block for each real input symbol.
+
+\vspace{0.7em}
+The accepting-state update
+\[
+F'=\{q:E(q)\cap F\neq\emptyset\}
+\]
+handles final free \(\eps\)-moves after the input is finished.
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Proof Sketch: Same Language After Removing \(\eps\)}
+
+\small
+We show both inclusions.
+
+\vspace{0.5em}
+\textbf{If \(M'\) accepts \(w\):}
+each transition of \(M'\) can be expanded into
+\[
+\eps^*\, a\, \eps^*
+\]
+inside \(M\). Expanding all transitions gives an accepting computation of \(M\).
+
+\vspace{0.7em}
+\textbf{If \(M\) accepts \(w\):}
+take its accepting path and group it around the real input symbols:
+\[
+\eps^* a_1 \eps^* a_2 \eps^* \cdots a_k \eps^*.
+\]
+Each group is simulated by one transition of \(M'\). Final \(\eps\)-moves are handled by \(F'\).
+
+\vspace{0.7em}
+Therefore, \(L(M)=L(M')\).
+
+\end{frame}
+
+%------------------------------------------------
 \begin{frame}{Example: An Epsilon-NFA over \(\{0,1\}\)}
 
 Let
@@ -1512,7 +1810,7 @@ F=\{q_4\}.
 
 (q2) edge node[above] {$\eps$} (q4)
 
-(q3) edge[bend right=15] node[below] {$\eps$} (q1)
+(q3) edge[bend right=15] node[above] {$\eps$} (q1)
 (q3) edge node[right] {$1$} (q4);
 
 \end{tikzpicture}
@@ -1786,6 +2084,61 @@ F' = \{ R \in Q' \mid R \cap F \neq \emptyset \}
 \end{frame}
 
 %------------------------------------------------
+\begin{frame}{Why the Subset Construction Is Correct}
+
+\small
+The key invariant is:
+
+\[
+\text{After reading }w,\text{ the DFA is in exactly the set of NFA states reachable after reading }w.
+\]
+
+\vspace{0.8em}
+Base case:
+\[
+w=\eps.
+\]
+The DFA starts in \(\{q_0\}\), which is exactly where the NFA can be before reading input.
+
+\vspace{0.8em}
+Inductive step:
+if the current set is \(R\), then after reading \(a\), the NFA may move from any state \(r\in R\) to any state in \(\delta(r,a)\).
+
+\vspace{0.5em}
+That is exactly:
+\[
+\delta'(R,a)=\bigcup_{r\in R}\delta(r,a).
+\]
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Proof Sketch: Same Language After Subset Construction}
+
+\small
+By the invariant, after reading any string \(w\), the DFA state is the set of all NFA states reachable after reading \(w\).
+
+\vspace{0.8em}
+The NFA accepts \(w\) iff at least one reachable state is accepting:
+\[
+\text{reachable set}\cap F\neq\emptyset.
+\]
+
+\vspace{0.8em}
+The subset-construction DFA declares exactly those subsets accepting:
+\[
+F'=\{R\subseteq Q:R\cap F\neq\emptyset\}.
+\]
+
+\vspace{0.8em}
+Therefore, for every input \(w\),
+\[
+w\in L(N)\quad\Longleftrightarrow\quad w\in L(M).
+\]
+
+\end{frame}
+
+%------------------------------------------------
 \begin{frame}{Worked Example}
 
 Let's convert an NFA that recognizes strings containing the substring $aba$.
@@ -1960,4 +2313,4 @@ Here is the deterministic machine we just built. It elegantly tracks the longest
     However, we need a generalized procedure to show that every language recognized by some NFA can also be recognized by some DFA.
 \end{frame}
 \end{document}
-\end{document}
+
