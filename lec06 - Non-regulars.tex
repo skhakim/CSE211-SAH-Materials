@@ -813,6 +813,902 @@ template} to prove that it is not regular.
 \end{frame}
 
 
+%================================================
+\section{More Worked-Out Examples}
+%================================================
+
+%------------------------------------------------
+\begin{frame}{Example 1: Unequal Numbers of \(0\)'s and \(1\)'s}
+
+\small
+Consider
+\[
+L_{\neq}
+=
+\left\{
+w\in\{0,1\}^*
+\;\middle|\;
+\#_0(w)\neq \#_1(w)
+\right\},
+\]
+where \(\#_\sigma(w)\) denotes the number of occurrences of the
+symbol \(\sigma\) in \(w\).
+
+\vspace{0.4em}
+We prove that \(L_{\neq}\) is not regular using closure properties.
+
+\begin{enumerate}
+    \item Assume for contradiction that \(L_{\neq}\) is regular.
+
+    \item Regular languages are closed under complement. Therefore,
+    \[
+    E
+    =
+    \{0,1\}^*\setminus L_{\neq}
+    =
+    \left\{
+    w\in\{0,1\}^*
+    \;\middle|\;
+    \#_0(w)=\#_1(w)
+    \right\}
+    \]
+    must be regular.
+
+    \item The language
+    \[
+    R=0^*1^*
+    \]
+    is regular.
+\end{enumerate}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 1: Restricting the Symbol Order}
+
+\small
+Regular languages are closed under intersection. Therefore,
+\(E\cap R\) must be regular.
+
+However,
+\[
+\begin{aligned}
+E\cap R
+&=
+\left\{
+w\in 0^*1^*
+\;\middle|\;
+\#_0(w)=\#_1(w)
+\right\} \\[0.3em]
+&=
+\{0^n1^n\mid n\geq 0\}.
+\end{aligned}
+\]
+
+But
+\[
+\{0^n1^n\mid n\geq 0\}
+\]
+is not regular.
+
+\vspace{0.5em}
+This is a contradiction. Therefore,
+\[
+\boxed{L_{\neq}\text{ is not regular}.}
+\]
+\hfill\(\blacksquare\)
+
+\vspace{0.5em}
+\begin{block}{Main idea}
+The intersection with \(0^*1^*\) forces all \(0\)'s to occur before
+all \(1\)'s, exposing the familiar language \(0^n1^n\).
+\end{block}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 1: Common Errors and Misconceptions}
+
+\small
+\begin{alertblock}{Potential mistakes}
+\begin{itemize}
+    \item The original language contains strings in any order:
+    \[
+    0101,\quad 1100,\quad 1010,\quad \ldots
+    \]
+    It is not restricted to strings of the form \(0^m1^n\).
+
+    \item The complement of \(L_{\neq}\) is
+    \[
+    \{w\mid \#_0(w)=\#_1(w)\},
+    \]
+    not immediately \(\{0^n1^n\mid n\geq 0\}\).
+
+    \item We obtain \(\{0^n1^n\mid n\geq 0\}\) only after intersecting
+    with \(0^*1^*\).
+
+    \item A complement must always be taken relative to a fixed
+    universe. Here the universe is \(\{0,1\}^*\).
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 2: Unary Strings of Prime Length}
+
+\small
+Consider
+\[
+L_{\mathrm{prime}}
+=
+\{a^t\mid t\text{ is prime}\}.
+\]
+
+\begin{enumerate}
+    \item Assume for contradiction that \(L_{\mathrm{prime}}\) is regular.
+
+    \item Let \(p\) be the pumping length.
+
+    \item Since there are infinitely many primes, choose a prime
+    \(q>p\), and let
+    \[
+    s=a^q.
+    \]
+    Then \(s\in L_{\mathrm{prime}}\) and \(|s|=q\geq p\).
+
+    \item For every valid decomposition \(s=xyz\) satisfying
+    \[
+    |xy|\leq p
+    \qquad\text{and}\qquad
+    |y|>0,
+    \]
+    we have
+    \[
+    y=a^k
+    \qquad\text{for some }1\leq k\leq p.
+    \]
+\end{enumerate}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 2: Pumping Produces a Composite Length}
+
+\small
+Choose
+\[
+i=q+1.
+\]
+
+Since the original string contains one copy of \(y\), replacing it by
+\(q+1\) copies adds \(qk\) symbols. Therefore,
+\[
+\begin{aligned}
+|xy^{q+1}z|
+&=q+qk\\
+&=q(k+1).
+\end{aligned}
+\]
+
+Now,
+\[
+q\geq 2
+\qquad\text{and}\qquad
+k+1\geq 2.
+\]
+
+Thus \(q(k+1)\) is a product of two integers greater than \(1\), so it
+is composite. Hence,
+\[
+xy^{q+1}z\notin L_{\mathrm{prime}}.
+\]
+
+This contradicts the Pumping Lemma. Therefore,
+\[
+\boxed{L_{\mathrm{prime}}\text{ is not regular}.}
+\]
+\hfill\(\blacksquare\)
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 2: Common Errors and Misconceptions}
+
+\small
+\begin{alertblock}{Potential mistakes}
+\begin{itemize}
+    \item The pumping length \(p\) is an arbitrary positive integer.
+    It is not necessarily prime.
+
+    \item We do not choose \(s=a^p\), because \(p\) may be composite.
+    Instead, after receiving \(p\), we choose a separate prime
+    \[
+    q>p.
+    \]
+
+    \item We do not choose \(y\). The adversary chooses the split.
+    We only conclude that
+    \[
+    y=a^k,\qquad 1\leq k\leq p.
+    \]
+
+    \item Pumping with \(i=q+1\) does not make the length
+    \((q+1)k\). The correct length is
+    \[
+    q+(i-1)k=q+qk=q(k+1).
+    \]
+
+    \item The pumping exponent \(i\) may depend on the pumping length
+    and the chosen string. It does not have to be a fixed constant.
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 3: Unary Strings of Composite Length}
+
+\small
+Consider
+\[
+L_{\mathrm{comp}}
+=
+\{a^t\mid t\text{ is composite}\}.
+\]
+
+Recall that \(0\) and \(1\) are neither prime nor composite. Therefore,
+\[
+a^*
+=
+L_{\mathrm{prime}}
+\cup
+L_{\mathrm{comp}}
+\cup
+\{\eps,a\}.
+\]
+
+Assume for contradiction that \(L_{\mathrm{comp}}\) is regular.
+
+\begin{itemize}
+    \item The finite language \(\{\eps,a\}\) is regular.
+
+    \item Hence,
+    \[
+    L_{\mathrm{comp}}\cup\{\eps,a\}
+    \]
+    would be regular.
+
+    \item Regular languages are closed under difference.
+\end{itemize}
+
+Therefore,
+\[
+a^*\setminus
+\bigl(L_{\mathrm{comp}}\cup\{\eps,a\}\bigr)
+\]
+would be regular.
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 3: Using the Earlier Prime Result}
+
+\small
+But
+\[
+\begin{aligned}
+a^*\setminus
+\bigl(L_{\mathrm{comp}}\cup\{\eps,a\}\bigr)
+&=
+L_{\mathrm{prime}}.
+\end{aligned}
+\]
+
+Thus \(L_{\mathrm{prime}}\) would be regular.
+
+However, the previous example proved that
+\[
+L_{\mathrm{prime}}
+=
+\{a^t\mid t\text{ is prime}\}
+\]
+is not regular.
+
+\vspace{0.5em}
+This is a contradiction. Therefore,
+\[
+\boxed{L_{\mathrm{comp}}\text{ is not regular}.}
+\]
+\hfill\(\blacksquare\)
+
+\vspace{0.5em}
+\begin{block}{Main idea}
+Prime and composite lengths cover all positive unary lengths except
+length \(1\). We must also account for length \(0\), represented by
+\(\eps\).
+\end{block}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 3: Common Errors and Misconceptions}
+
+\small
+\begin{alertblock}{Potential mistakes}
+\begin{itemize}
+    \item The complement of the composite-length language is not
+    exactly the prime-length language.
+
+    \item The strings
+    \[
+    \eps=a^0
+    \qquad\text{and}\qquad
+    a=a^1
+    \]
+    have lengths \(0\) and \(1\), which are neither prime nor composite.
+
+    \item Therefore,
+    \[
+    a^*\setminus L_{\mathrm{comp}}
+    =
+    L_{\mathrm{prime}}\cup\{\eps,a\}.
+    \]
+
+    \item To isolate the prime-length language, we must remove both
+    \(L_{\mathrm{comp}}\) and \(\{\eps,a\}\):
+    \[
+    L_{\mathrm{prime}}
+    =
+    a^*\setminus
+    \bigl(L_{\mathrm{comp}}\cup\{\eps,a\}\bigr).
+    \]
+
+    \item The proof relies on the earlier result that
+    \(L_{\mathrm{prime}}\) is not regular.
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 4: Unary Strings of Fibonacci Length}
+
+\small
+Let
+\[
+F_0=0,\qquad F_1=1,\qquad
+F_{n+1}=F_n+F_{n-1}\quad(n\geq 1),
+\]
+and consider
+\[
+L_{\mathrm{Fib}}
+=
+\{a^{F_n}\mid n\geq 0\}.
+\]
+
+\begin{enumerate}
+    \item Assume for contradiction that \(L_{\mathrm{Fib}}\) is regular.
+
+    \item Let \(p\) be its pumping length.
+
+    \item Since the Fibonacci numbers grow without bound, choose
+    \(m\geq 3\) sufficiently large that
+    \[
+    F_{m-1}>p.
+    \]
+
+    Let
+    \[
+    s=a^{F_m}.
+    \]
+
+    Since \(F_m>F_{m-1}>p\), we have
+    \[
+    s\in L_{\mathrm{Fib}}
+    \qquad\text{and}\qquad
+    |s|\geq p.
+    \]
+\end{enumerate}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 4: Pumping Between Consecutive Fibonacci Numbers}
+
+\small
+For every valid decomposition \(s=xyz\),
+\[
+y=a^k
+\qquad\text{for some }1\leq k\leq p.
+\]
+
+Choose \(i=2\). Then
+\[
+|xy^2z|=F_m+k.
+\]
+
+Because \(k\geq 1\),
+\(\quad
+F_m<F_m+k.
+\)
+
+Also, since \(k\leq p<F_{m-1}\),
+\(\quad
+F_m+k
+<
+F_m+F_{m-1}
+=
+F_{m+1}.
+\)
+
+Therefore,
+\(\quad
+F_m<F_m+k<F_{m+1}.
+\)
+
+Thus \(F_m+k\) lies strictly between two consecutive Fibonacci
+numbers. It cannot itself be a Fibonacci number. Hence,
+\(
+xy^2z\notin L_{\mathrm{Fib}}.
+\)
+
+Therefore,
+\(
+\boxed{L_{\mathrm{Fib}}\text{ is not regular}.}
+\)
+\hfill\(\blacksquare\)
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 4: Common Errors and Misconceptions}
+
+\small
+\begin{alertblock}{Potential mistakes}
+\begin{itemize}
+    \item The pumping length \(p\) need not be a Fibonacci number.
+
+    \item We must choose a Fibonacci number after receiving \(p\).
+    Specifically, choose \(m\) such that
+    \[
+    F_{m-1}>p.
+    \]
+
+    \item Merely choosing \(F_m>p\) is not enough for this proof.
+    We need
+    \[
+    k\leq p<F_{m-1}
+    \]
+    so that the pumped length remains below \(F_{m+1}\).
+
+    \item The first few Fibonacci numbers contain a repetition:
+    \(
+    F_1=F_2=1.
+    \)
+    Choosing \(m\geq 3\) avoids this irrelevant initial duplication.
+
+    \item We pump upward with \(i=2\). Pumping down may accidentally
+    produce another Fibonacci length and requires more analysis.
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}{Example 5: Equal Numbers of \(ab\) and \(ba\)}
+
+\small
+Let
+\[
+\Sigma=\{a,b,c\},
+\]
+and define
+\[
+L_{ab=ba}
+=
+\left\{
+w\in\Sigma^*
+\;\middle|\;
+\#_{ab}(w)=\#_{ba}(w)
+\right\},
+\]
+where \(\#_{ab}(w)\) denotes the number of occurrences of \(ab\) as
+a consecutive substring of \(w\).
+
+\vspace{0.4em}
+Occurrences may overlap. For example,
+\[
+w=aba
+\]
+contains one occurrence of \(ab\) and one occurrence of \(ba\), so
+\[
+aba\in L_{ab=ba}.
+\]
+
+Similarly,
+\[
+abcba
+\]
+contains one \(ab\) and one \(ba\), while
+\[
+abcab
+\]
+contains two occurrences of \(ab\) and no occurrence of \(ba\).
+
+\vspace{0.4em}
+A direct Pumping Lemma proof on arbitrary strings in \(L_{ab=ba}\)
+would be difficult because the pumpable substring could occur almost
+anywhere.
+
+\begin{block}{Proof strategy}
+We first intersect \(L_{ab=ba}\) with a carefully chosen regular
+language that forces the strings into a predictable block structure.
+We then apply the Pumping Lemma to the resulting language.
+\end{block}
+
+\end{frame}
+
+
+
+
+%------------------------------------------------
+\begin{frame}{Example 5: Restricting to a Two-Block Language}
+
+\small
+For
+\[
+w=(abc)^m(bac)^n,
+\]
+we have
+\[
+\#_{ab}(w)=m
+\qquad\text{and}\qquad
+\#_{ba}(w)=n.
+\]
+
+Therefore,
+\[
+L_{ab=ba}\cap R
+=
+\{(abc)^n(bac)^n\mid n\geq 0\}.
+\]
+
+Assume for contradiction that \(L_{ab=ba}\) is regular.
+
+Since \(R\) is regular and regular languages are closed under
+intersection, the language
+\[
+K
+=
+\{(abc)^n(bac)^n\mid n\geq 0\}
+\]
+would also be regular.
+
+We now prove directly, using the Pumping Lemma, that \(K\) is not
+regular.
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 5: Setting Up the Pumping Argument}
+
+\small
+Assume that
+\[
+K=\{(abc)^n(bac)^n\mid n\geq 0\}
+\]
+is regular, and let \(p\) be its pumping length.
+
+Choose
+\[
+s=(abc)^p(bac)^p.
+\]
+
+Clearly,
+\[
+s\in K
+\qquad\text{and}\qquad
+|s|=6p\geq p.
+\]
+
+For every valid decomposition
+\(
+s=xyz
+\)
+satisfying
+\(
+|xy|\leq p
+\qquad\text{and}\qquad
+|y|>0,
+\)
+the substring \(y\) lies entirely within the first \(p\) symbols of
+\((abc)^p\).
+
+Since the complete first region \((abc)^p\) has length \(3p\), the
+pumped part cannot reach the second region \((bac)^p\).
+
+Let
+\(
+|y|=k,
+\qquad 1\leq k\leq p.
+\)
+
+We choose \(i=0\) and consider
+\(
+xy^0z=xz.
+\)
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 5: Case 1 --- \(3\nmid k\)}
+
+\small
+Suppose first that
+\[
+3\nmid k.
+\]
+
+The original string has length
+\[
+|s|=6p.
+\]
+
+After pumping down,
+\[
+|xz|=6p-k.
+\]
+
+Because \(6p\) is divisible by \(3\), but \(k\) is not divisible by
+\(3\),
+\(
+3\nmid(6p-k).
+\)
+
+However, every string in \(K\) has the form
+\(
+(abc)^n(bac)^n
+\)
+and therefore has length
+\(
+3n+3n=6n,
+\)
+which is divisible by \(3\).
+
+Consequently,
+\(
+xz\notin K.
+\)
+
+Thus, in this case, pumping down produces a string outside the
+language.
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 5: Case 2 --- \(3\mid k\)}
+
+\small
+Now suppose that
+\[
+3\mid k.
+\]
+
+Then
+\[
+k=3r
+\]
+for some integer \(r\geq 1\).
+
+The word \((abc)^p\) is periodic with period \(3\). Removing any
+consecutive \(3r\) symbols preserves the \(abc\)-phase of the
+remaining symbols.
+
+Therefore, after pumping down,
+\[
+xz=(abc)^{p-r}(bac)^p.
+\]
+
+The first region now contains \(p-r\) copies of \(abc\), while the
+second region still contains \(p\) copies of \(bac\).
+
+Since \(r\geq 1\),
+\(
+p-r\neq p.
+\)
+
+Hence \(xz\) is not of the required form
+\(
+(abc)^n(bac)^n.
+\)
+
+Therefore,
+\(
+xz\notin K.
+\)
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 5: Completing the Proof}
+
+\small
+For every valid decomposition \(s=xyz\), let \(k=|y|>0\).
+
+There are only two possibilities:
+
+\[
+\begin{array}{ll}
+3\nmid k
+&
+\Longrightarrow
+|xz|\text{ is not divisible by }3,
+\\[0.5em]
+3\mid k
+&
+\Longrightarrow
+xz=(abc)^{p-r}(bac)^p
+\text{ for some }r\geq 1.
+\end{array}
+\]
+
+In both cases,
+\(
+xz\notin K.
+\)
+
+This contradicts the Pumping Lemma. Therefore,
+\(
+K=\{(abc)^n(bac)^n\mid n\geq 0\}
+\)
+is not regular.
+
+But if \(L_{ab=ba}\) were regular, then
+\(
+K=L_{ab=ba}\cap R
+\)
+would be regular. This is impossible.
+
+Therefore,
+\(
+\boxed{L_{ab=ba}\text{ is not regular over }\{a,b,c\}.}
+\)
+\hfill\(\blacksquare\)
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example 5: Common Errors and Misconceptions}
+
+\small
+\begin{alertblock}{Potential mistakes}
+\begin{itemize}
+    \item The pumping length \(p\) counts individual symbols, not
+    complete \(abc\)-blocks.
+
+    \item From \(|xy|\leq p\), we may conclude that \(y\) lies inside
+    the first \((abc)^p\) region. We may not conclude that \(y\) is
+    itself a sequence of complete \(abc\)-blocks.
+
+    \item The adversary chooses \(x\), \(y\), and \(z\). Therefore, we
+    cannot assume that \(y\) begins at the start of an \(abc\)-block.
+
+    \item We must consider both possibilities:
+    \[
+    3\nmid |y|
+    \qquad\text{and}\qquad
+    3\mid |y|.
+    \]
+
+    \item If \(3\nmid |y|\), the simplest contradiction comes from the
+    total length. There is no need to analyze every resulting symbol
+    boundary.
+
+    \item We may write
+    \(
+    xz=(abc)^{p-r}(bac)^p
+    \)
+    only in the case where \(|y|=3r\).
+
+    \item Proving that \(K\) is non-regular is not by itself the final
+    conclusion. We must use
+    \(
+    K=L_{ab=ba}\cap R
+    \)
+    and closure under intersection to conclude that \(L_{ab=ba}\) is
+    non-regular.
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Why the Extra Symbol \(c\) Matters}
+
+\small
+Over the binary alphabet \(\{a,b\}\), the difference
+\[
+\#_{ab}(w)-\#_{ba}(w)
+\]
+depends only on the first and last symbols of \(w\):
+
+\[
+\#_{ab}(w)-\#_{ba}(w)
+=
+\begin{cases}
+ 1, & \text{if \(w\) starts with \(a\) and ends with \(b\)},\\
+-1, & \text{if \(w\) starts with \(b\) and ends with \(a\)},\\
+ 0, & \text{otherwise}.
+\end{cases}
+\]
+
+Thus equality can be checked using finite memory over \(\{a,b\}\).
+
+\vspace{0.5em}
+Over \(\{a,b,c\}\), occurrences of \(c\) separate the word into many
+binary segments. Each segment may contribute
+\(
+-1,\qquad 0,\qquad\text{or}\qquad 1
+\)
+to the difference, and these contributions may accumulate without
+bound.
+
+\begin{alertblock}{Conclusion}
+The language is regular over \(\{a,b\}\), but it is not regular over
+\(\{a,b,c\}\).
+\end{alertblock}
+
+\end{frame}
+
+
+
+%------------------------------------------------
+\begin{frame}{Lessons from the Worked-Out Examples}
+
+\small
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{p{4.0cm}p{5.0cm}p{4.3cm}}
+\toprule
+\textbf{Language} &
+\textbf{Main proof technique} &
+\textbf{Key danger} \\
+\midrule
+
+Unequal numbers of \(0\)'s and \(1\)'s &
+Complement and intersection &
+Confusing all strings with \(0^*1^*\) \\
+
+Prime unary length &
+Pumping Lemma &
+Assuming the pumping length is prime \\
+
+Composite unary length &
+Closure under difference &
+Forgetting lengths \(0\) and \(1\) \\
+
+Fibonacci unary length &
+Pumping between consecutive values &
+Assuming \(p\) is Fibonacci \\
+
+Equal numbers of \(ab\) and \(ba\) &
+Intersection &
+Ignoring block boundaries \\
+
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.6em}
+\[
+\text{The proof method must match the structure of the language.}
+\]
+
+\end{frame}
+
+
 
 
 %------------------------------------------------
